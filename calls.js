@@ -5,7 +5,10 @@ var replace = require("replaceall");
 var val = require('validator');
 var caps = require('change-case');
 
-module.exports = function (config, type) {
+var type = require('./type');
+var execute = require('./execute');
+
+module.exports = function (config) {
     var module = [];
 	
 	//Get files
@@ -42,12 +45,9 @@ module.exports = function (config, type) {
 			continue;
 		}
 		
-		//Check params
-		
-		
 		//Require
 		var call = {}
-		call.module = require(file)(type);
+		call.module = require(file)(type, module, execute, config);
 		call.method = method;
 		call.url = url;
 		call.path = file;
