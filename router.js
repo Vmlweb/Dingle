@@ -77,11 +77,6 @@ module.exports = function (config, app, calls) {
 		
 		//Execute
 		call.module.execute(req, res, new_query, respond);
-		
-		//No responce
-		if (!res.headersSent){
-			return respond(req, res, false, 'API call did not respond', {});
-		}
 	}
 	
 	//Responce
