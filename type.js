@@ -23,7 +23,7 @@ module.exports.int = function(string){
 	}
 	return val.toInt(string);
 }
-module.exports.card = function(string){
+module.exports.date = function(string){
 	if (!val.isDate(string)){
 		throw new Error();
 	}
