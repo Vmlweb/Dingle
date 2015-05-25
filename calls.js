@@ -5,7 +5,7 @@ var replace = require("replaceall");
 var val = require('validator');
 var caps = require('change-case');
 
-module.exports = function (config, types) {
+module.exports = function (config, type) {
     var module = [];
 	
 	//Get files
@@ -28,6 +28,9 @@ module.exports = function (config, types) {
 		var name = replace('/',' ',url);
 		name = caps.pascalCase(name) + '_' + method;
 		name = replace(' ','',name);
+		if (name.charAt(0) == '_'){
+			name = name.substring(1);
+		}
 		
 		//Check extension
 		if (!val.equals(ext,'.js')){
@@ -39,17 +42,18 @@ module.exports = function (config, types) {
 			continue;
 		}
 		
+		//Check params
+		
+		
 		//Require
 		var call = {}
-		call.module = require(file)(types);
+		call.module = require(file)(type);
 		call.method = method;
 		call.url = url;
 		call.path = file;
 		call.name = name;
 		module.push(call);
 	}
-
-	console.log(module);
 
     return module;
 };

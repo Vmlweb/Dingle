@@ -31,7 +31,13 @@
   },
   "homepage": "https://github.com/Vmlweb/Dingle#readme",
   "dependencies": {
+    "body-parser": "^1.12.4",
+    "change-case": "^2.3.0",
     "express": "^4.12.4",
-    "validator": "^3.40.0"
+    "multer": "^0.1.8",
+    "replaceall": "^0.1.6",
+    "require-reload": "^0.2.2",
+    "validator": "^3.40.0",
+    "wrench": "^1.5.8"
   }
 }
