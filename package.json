@@ -32,7 +32,6 @@
   "homepage": "https://github.com/Vmlweb/Dingle#readme",
   "dependencies": {
     "express": "^4.12.4",
-    "pm2": "^0.12.15",
     "validator": "^3.40.0"
   }
 }
