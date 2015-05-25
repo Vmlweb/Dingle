@@ -23,55 +23,73 @@ To start dingle it requires a minimum of a hostname to listen on:
 var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
 ```
 
-### Additional Options
+## Directory Layout
 
-There are further options which can be used as follows:
+Each API call exists in a module and is loaded from the public directory like so:
 
-```javascript
-var dingle = require('dingle')({
-	
-	//Misc
-	reload: true, //Are API calls reloaded before execution
-	path: "./public", //Path for API calls
-	
-	//App
-	app_name: 'My Awesome App',
-	app_prefix; 'MAA',
-	app_version: '0.0.2',
-	
-	//HTTP
-	http_hostname: '0.0.0.0',
-	http_port: 80,
-	
-	//HTTPS
-	https_hostname: '0.0.0.0',
-	https_port: = 443,
-	https_ssl_key: './key.pem',
-	https_ssl_cert: './cert.pem'
-});
+```
+public
+├───get.js
+├───post.js
+├───users
+│   └───get.js
+│   └───post.js
+│   └───sessions
+│       └───get.js
+│       └───put.js
+│       └───post.js
+│       └───delete.js
 ```
 
-## Creating API Calls
+The filename determines which of the following methods is used:
 
-Each API call exists in a JS file/module and is loaded by default from ./public.
-The folder layout of ./public will match the URL of the rerquest.
+- **GET** - get.js
+- **PUT** - put.js
+- **DELETE** - delete.js
+- **POST** - post.js
 
-The filename of the module determines which method will be used:
+Each call is referred to using the following naming convention:
 
-- **GET** = get.js
-- **PUT** = put.js
-- **DELETE** = delete.js
-- **POST** = post.js
+```
+public
+├───GET
+├───POST
+├───users
+│   └───Users_GET
+│   └───Users_POST
+│   └───sessions
+│       └───UsersSessions_GET
+│       └───UsersSessions_PUT
+│       └───UsersSessions_POST
+│       └───UsersSessions_DELETE
+```
 
-The file/module for an API call is laid out as follows:
+When running the directory layout will match the url so therefore would route to:
+
+```
+public
+├───/
+├───/
+├───users
+│   └───/Users/
+│   └───/Users/
+│   └───sessions
+│       └───/Users/Sessions/
+│       └───/Users/Sessions/
+│       └───/Users/Sessions/
+│       └───/Users/Sessions/
+```
+
+## API Layout
+
+The module for an API call is laid out as follows:
 
 ```javascript
-module.exports = function (type) {
+module.exports = function (type, calls, execute, config) {
 	var module = {};
 		
 	module.description = "Register Users";
-	module.details = "Use this function to create a user in the
-	MongoDB database before they are given access to the website";
+	module.details = "Use this function to create a user in the MongoDB database before they are given access to the website";
 
 	module.params = {
 		email: { 
@@ -90,8 +108,6 @@ module.exports = function (type) {
 
 	module.execute = function(res, req, params, respond){
 		
-		///Do Stuff!
-		
 		//Create User
 		var user = new NewUser({
 			email: params.email,
@@ -103,7 +119,9 @@ module.exports = function (type) {
 			if (error){
 				respond(res, req, false,'Registration Failed:' + error,{});
 			}else{
-				respond(res, req, true,'Registration Complete',{ user: user._id });	
+				respond(res, req, true,'Registration Complete',{
+					user: user._id
+				});	
 			}
 		});
 	}
@@ -112,13 +130,11 @@ module.exports = function (type) {
 };
 ```
 
-Once the required code has completed inside the execute function you must use the respond callback.
+Once the task has completed inside the execute function you must use the respond callback.
 
 ```javascript
 respond(res, req, success, message, output);
 ```
-
-If no respond is called then the call will hang and timeout eventually.
 
 ## Parameter Validation
 
@@ -129,7 +145,7 @@ The parameters for methods must be supplied in the below format:
 - **DELETE** - URL Encoded
 - **POST** - Multipart(Files) or Form URL Encoded
 
-There are built in types which are based on the validator module:
+You can use built in data types which are based on the validator module:
 
 ```javascript
 type.string
@@ -144,17 +160,46 @@ type.ip
 type.url
 type.base64
 type.mongo //MongoDB object id
-type.card //Credit card
+type.card //Credit or debit card
 ```
 
-### Adding Custom Types
+## File Uploads
 
-Custom data types can be added and applied to the API call parameters.
+When using type.file an array is returned in the params property.
+The array contains info about the location, size and name of the file.
+It's your job to manipulate, read and clean up when finished.
 
-- The parameter is passed into the function as a string.
-- Perform the necessary validation and throw an Error() should there be any invalidity.
-- Once the data has been validated it must be returned in the correct data type.
+## Additional Options
 
+There are further options which can be used as follows:
+
+```javascript
+var dingle = require('dingle')({
+	
+	//Misc
+	reload: true, //Are API calls reloaded before execution
+	path: "./public", //Path for API calls
+	
+	//App (Default from package.json)
+	app_name: 'My Awesome App',
+	app_prefix; 'MAA',
+	app_version: '0.0.2',
+	
+	//HTTP
+	http_hostname: '0.0.0.0',
+	http_port: 80,
+	
+	//HTTPS
+	https_hostname: '0.0.0.0',
+	https_port: = 443,
+	https_ssl_key: './key.pem',
+	https_ssl_cert: './cert.pem'
+});
+```
+
+## Adding Custom Types
+
+Custom data types can be added and applied to the API parameters.
 For example:
 
 ```javascript
@@ -170,6 +215,33 @@ dingle.type.date = function(string){
 	
 	//Return sanitized result
 	return validator.toDate(string);
+}
+```
+
+- The parameter is passed into the function as a string.
+- Perform the necessary validation and throw an Error() should there be any invalidity.
+- Once the data has been validated it must be returned in the correct data type.
+
+## Callception
+
+You can execute another call from within a call using the execute function:
+
+```javascript
+execute(config, req, callback(output){
+	console.log(output);
+}, params, call_name);
+```
+
+The parameter call_name specifies which call to execute.
+For example with /login/post.js:
+
+```javascript
+module.execute = function(res, req, params, respond){
+
+    execute(config, req, function(output){
+	    
+		respond(res, req, true,'Result from Login_POST', output);
+	}, params, 'Login_POST');
 }
 ```
 
@@ -189,8 +261,8 @@ We can access information relating to the API calls loaded:
 var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
 
 dingle.calls.forEach(function(call){
-	console.log(call.method + ' ' + call.url);	
-});
+	console.log(call.name + ' ' + call.method);
+}
 ```
 
 We can add additional Express middleware:
