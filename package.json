@@ -1,0 +1,38 @@
+{
+  "name": "dingle",
+  "version": "0.0.1",
+  "description": "NodeJS REST API Framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Vmlweb/Dingle.git"
+  },
+  "keywords": [
+    "api",
+    "framework",
+    "express",
+    "load",
+    "balance",
+    "log",
+    "logging",
+    "generator",
+    "code",
+    "export",
+    "endpoint",
+    "manager"
+  ],
+  "author": "Vmlweb <admin@vmlweb.co.uk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Vmlweb/Dingle/issues"
+  },
+  "homepage": "https://github.com/Vmlweb/Dingle#readme",
+  "dependencies": {
+    "express": "^4.12.4",
+    "pm2": "^0.12.15",
+    "validator": "^3.40.0"
+  }
+}
