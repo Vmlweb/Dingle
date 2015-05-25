@@ -34,6 +34,7 @@ module.exports = function (config) {
 	//Misc
 	module.reload = config.reload || false;
 	module.path = config.path || "./public";
+	module.path = process.cwd() + '/' +  module.path;
 	module.methods = [
 		'GET',
 		'PUT',
