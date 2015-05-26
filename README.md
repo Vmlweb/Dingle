@@ -184,21 +184,19 @@ module.params = {
 
 You can use built in validation types which are based on the validator module:
 
-```javascript
-type.string
-type.bool
-type.float
-type.int
-type.date //Returns a javascript date object
-type.file //Can only be used in POST method with multipart requests, see below
-
-type.email
-type.ip
-type.url
-type.base64
-type.mongo //MongoDB object id
-type.card //Credit or debit card
-```
+- `string`
+- `bool`
+- `float`
+- `int`
+- `date` - Returns a javascript date object
+- `file` - Can only be used in POST method with multipart requests, see below
+- `email`
+- `originalname`
+- `ip`
+- `url`
+- `base64`
+- `mongo` - MongoDB object id
+- `card` - Credit or debit card
 
 ## Custom Types
 
@@ -352,15 +350,15 @@ dingle.execute(dingle.config, {}, function(success, message, output){
 
 ## Customization
 
-You can access internal modules dingle uses to run to gain more functionality using the following:
+You can access internal modules dingle uses to run to gain more functionality using the following properties:
 
-- `dingle.config` - Startup configuration for dingle.
-- `dingle.calls` - Object with dingle function information.
-- `dingle.type` - Object with parameter validation types.
-- `dingle.express` - Express app instance.
-- `dingle.router` - Express request router.
-- `dingle.tcp` - Standard net TCP sever.
-- `dingle.udp` - Socket for UDP server.
+- `config` - Startup configuration for dingle.
+- `calls` - Object with dingle function information.
+- `type` - Object with parameter validation types.
+- `express` - Express app instance.
+- `router` - Express request router.
+- `tcp` - Standard net TCP sever.
+- `udp` - Socket for UDP server.
 
 You can access information relating to the API calls loaded:
 
