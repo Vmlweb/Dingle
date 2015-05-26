@@ -110,7 +110,7 @@ module.exports = function (type, functions, execute, config) {
         }
     }
  
-    module.execute = function(res, req, params, respond){
+    module.execute = function(req, res, params, respond){
         
         //Create User
 		var user = new NewUser({
@@ -121,9 +121,9 @@ module.exports = function (type, functions, execute, config) {
 		//Save User to MongoDB
 		user.save(function (error){
 			if (error){
-				respond(res, req, false,'Registration Failed:' + error,{});
+				respond(req, res, false,'Registration Failed:' + error,{});
 			}else{
-				respond(res, req, true,'Registration Complete',{
+				respond(req, res, true,'Registration Complete',{
 					user: user._id
 				});	
 			}
@@ -137,7 +137,7 @@ module.exports = function (type, functions, execute, config) {
 Once the task has completed inside module.execute you must use the respond callback.
 
 ```javascript
-respond(res, req, success, message, output);
+respond(req, res, success, message, output);
 ```
 
 ## Parameter Layout
@@ -184,7 +184,9 @@ type.mongo //MongoDB object id
 type.card //Credit or debit card
 ```
 
-Or custom data types can be added and applied to dingle like so:
+## Custom Types
+
+Custom data types can be added and used in parameter validation like so:
 
 ```javascript
 var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
@@ -222,6 +224,28 @@ When using type.file the following Multer object is returned in the params prope
 - `buffer` - Raw data (is null unless the inMemory option is true).
 
 It's your job to manipulate, read and clean up when finished.
+
+## File Downloads
+
+Files can be downloaded from a function using the express response object like so:
+
+```javascript
+module.execute = function(req, res, params, respond){    
+	
+		var file = './uploads/' + params.file;
+		
+		fs.exists(file, function (exists){
+			if (exists){
+				res.download(file, 'download.zip');
+			}else{
+				respond(req, res, false,'File could not be found',{});
+			}	
+		});
+	    
+	}
+```
+
+When downloading a file no status or message can be supplied and so res.download and respond should not be used one after another.
 
 ## Additional Options
 
@@ -263,14 +287,14 @@ execute(config, req, function(success, message, output){
 For example to execute the `users_forgot_username` function we can use the following:
 
 ```javascript
-module.execute = function(res, req, params, respond){
+module.execute = function(req, res, params, respond){
 
     execute(config, req, function(success, message, output){
 	    
 	    if (success){
-			respond(res, req, true,'Success result from users_forgot_username', output);
+			respond(req, res, true,'Success result from users_forgot_username', output);
 		}else{
-			respond(res, req, true,'Error result from users_forgot_username', message);
+			respond(req, res, true,'Error result from users_forgot_username', message);
 		}
 	
 	}, params, 'users_forgot_username');

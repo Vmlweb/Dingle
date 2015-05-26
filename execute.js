@@ -56,6 +56,7 @@ module.exports = function (config, req, res, query, call) {
 	
 	//Respond
 	function respond(req, res, success, message, output){
+		//Construct
 		var json = {
 			success: success,
 			message: message,
@@ -64,7 +65,9 @@ module.exports = function (config, req, res, query, call) {
 			
 		//Output
 		if (typeof res.json === 'function'){
-			res.json(json);
+			if (!res.headersSent){
+				res.json(json);
+			}
 		}else{
 			res(json.success, json.message, json.output);
 		}
