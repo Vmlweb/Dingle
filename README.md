@@ -63,25 +63,25 @@ Also note function names ARE case sensitive.
 
 ## HTTP & HTTPS
 
-To access the functions via http or https we use the URL.
+To access the functions via `HTTP or HTTPS` we use the URL.
 
 ```
 https://myawesomeapi.com/users_forgot_username/
 ```
 
-For *GET, PUT and DELETE* requests use url encoded parameters to supply data to the function like so:
+For `GET, PUT and DELETE` requests use url encoded parameters to supply data to the function like so:
 
 ```
 https://myawesomeapi.com/users_forgot_username/?email=admin@myawesomeapi.com&password=myawesomeapi.com
 ```
 
-For *POST* requests the url encoded data must be attached to the multipart body of the request.
+For `POST` requests the url encoded data must be attached to the multipart body of the request.
 
 ## Function Layout
 
 The module for each function is laid out as follows:
 
-- `module.method` - Methods available: *GET, PUT, DELETE, POST*
+- `module.method` - Methods available: `GET, PUT, DELETE, POST`
 - `module.name` - Function in a few words.
 - `module.description` - Function in a few more words.
 - `module.params` - List of parameters the function requires. (Will be validated and passed to module.execute)
@@ -146,7 +146,7 @@ Dingle will handle parameter validation for you and can be specified like so:
 
 - `validate` - Validation types available, see below.
 - `required` - Whether the value can be blank.
-- `description` - Parameters use in a sentance.
+- `description` - Parameters use in a sentence.
 - `error` - Error message which is presented if the parameter failed validation.
 
 ```javascript
