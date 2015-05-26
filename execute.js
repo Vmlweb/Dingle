@@ -5,27 +5,19 @@ var type = require('./type');
 var execute = require('./execute');
 
 module.exports = function (config, req, res, query, call) {
+	var calls = require('./calls')(config);
 	var new_query = {}
 	
 	//Call is string
 	if (!call.hasOwnProperty('module')){
-		var reload = require('require-reload')(require);
-		var calls = require('./calls')(config);
-		
-		//Import
+
+		//Search for module
 		for (current in calls){
 			current = calls[current];
 			if (call == current.name){
-				call = {}
-				call.module = reload(current.path)(type, calls, execute, config);
+				call = current
 			}
 		}
-	}
-	
-	//Reload
-	if (config.reload && res.hasOwnProperty('app')){
-		var reload = require('require-reload')(require);
-		call.module = reload(call.path)(type, require('./calls')(config), execute, config);
 	}
 	
 	//Validate
@@ -74,7 +66,7 @@ module.exports = function (config, req, res, query, call) {
 		if (typeof res.json === 'function'){
 			res.json(json);
 		}else{
-			res(json);
+			res(json.success, json.message, json.output);
 		}
 	}
 };

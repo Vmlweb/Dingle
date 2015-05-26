@@ -1,4 +1,4 @@
-var fs = require('fs');
+/*var fs = require('fs');
 var wrench = require('wrench');
 var path = require('path');
 var replace = require("replaceall");
@@ -25,28 +25,23 @@ module.exports = function (config) {
 		if (!val.equals(path.extname(file),'.js')){
 			continue;
 		}
-		
-		//Construct
-		var call = {};
-		call.path = file;
-		
+			
 		//Construct name
-		call.name = replace(config.path.functions,'',file);
-		call.name = replace(path.extname(call.name),'',call.name);
-		call.name = replace('/','_',call.name);
-		if (call.name.charAt(0) == '_'){
-			call.name = call.name.substring(1);
+		var name = replace('/',' ',url);
+		name = caps.pascalCase(name) + '_' + method;
+		name = replace(' ','',name);
+		if (name.charAt(0) == '_'){
+			name = name.substring(1);
 		}
 		
-		//Module
+		//Require
+		var call = {}
 		call.module = require(file)(type, module, execute, config);
-		if (!call.module.hasOwnProperty('method')){ call.module.method = 'GET'; }else{ call.module.method = call.module.method.toUpperCase(); }
-		if (!call.module.hasOwnProperty('name')){ call.module.name = 'Function'; }
-		if (!call.module.hasOwnProperty('description')){ call.module.description = 'Description'; }
-		if (!call.module.hasOwnProperty('params')){ call.module.params = {}; }
-		
+		call.method = path.basename(file,path.extname(file)).toUpperCase();
+		call.path = file;
+		call.name = name;
 		module.push(call);
 	}
-	
+
     return module;
-};
+};*/

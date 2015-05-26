@@ -13,7 +13,7 @@ $ npm install --save dingle
 	* JSON output
 	* Parameter validation
 	* File uploads
-	* Self calling
+	* Execute functions
 	* Based on ExpressJS
 
 ## Startup
@@ -24,92 +24,89 @@ To start dingle it requires a minimum of a hostname to listen on:
 var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
 ```
 
+In dingle each API call is referred to as a **function**.
+
 ## Directory Layout
 
-Each API call exists in a module and is loaded from the public directory like so:
+Each function exists in a module and is loaded from the public directory like so:
 
 ```
 public
-├───get.js
-├───post.js
+├───status.js
+├───time.js
+├───users.js
 ├───users
-│   └───get.js
-│   └───post.js
+│   └───register.js
+│   └───forgot_username.js
+│   └───forgot_password.js
 │   └───sessions
-│       └───get.js
-│       └───put.js
-│       └───post.js
-│       └───delete.js
+│       └───login.js
+│       └───logout.js
+│       └───list.js
 ```
 
-The filename determines which of the following methods is used:
-
-- `GET` - get.js
-- `PUT` - put.js
-- `DELETE` - delete.js
-- `POST` - post.js
-
-Each call is referred to using the following naming convention:
+Each function is referred to using a naming convention where directories are separated by underscores:
 
 ```
-public
-├───GET
-├───POST
-├───users
-│   └───Users_GET
-│   └───Users_POST
-│   └───sessions
-│       └───UsersSessions_GET
-│       └───UsersSessions_PUT
-│       └───UsersSessions_POST
-│       └───UsersSessions_DELETE
+status
+time
+users
+users_register
+users_forgot_username
+users_forgot_password
+users_sessions_login
+users_sessions_logout
+users_sessions_list
 ```
 
-When running the directory layout will match the url so therefore would route to:
+Also note function names ARE case sensitive.
+
+## HTTP & HTTPS
+
+We can then execute these functions via a chosen protocol:
 
 ```
-public
-├───/
-├───/
-├───users
-│   └───/Users/
-│   └───/Users/
-│   └───sessions
-│       └───/Users/Sessions/
-│       └───/Users/Sessions/
-│       └───/Users/Sessions/
-│       └───/Users/Sessions/
+https://myawesomeapi.com/users_forgot_username/
 ```
 
-## API Layout
+See more below about accessing functions in each protocol.
 
-The module for an API call is laid out as follows:
+## Function Layout
+
+The module for each function is laid out as follows:
+
+- `module.method` - Methods available: *GET, PUT, DELETE, POST*
+- `module.name` - Function in a few words.
+- `module.description` - Function in a few more words.
+- `module.params` - List of parameters the function requires. (Will be validated and passed to module.execute)
+- `module.execute` - Perform main script of the function and provide responce.
 
 ```javascript
-module.exports = function (type, calls, execute, config) {
-	var module = {};
-		
-	module.description = "Register Users";
-	module.details = "Use this function to create a user in the MongoDB database before they are given access to the website";
-
-	module.params = {
-		email: { 
-			validate: type.email,
-			required: true, 
-			description:"Email for registering user ", 
-			error: 'Please enter a valid email address' 
-		},
-		password: { 
-			validate: type.string,
-			required: true,
-			description: "Password for registering user",
-			error: 'Please enter a password'
-		}
-	}
-
-	module.execute = function(res, req, params, respond){
-		
-		//Create User
+module.exports = function (type, functions, execute, config) {
+    var module = {};
+    
+    module.method = 'GET';
+    module.name = "Register Users";
+    module.description = "Use this function to create a user in the MongoDB database before they are given access to the website";
+ 
+    module.params = {
+        email: { 
+            validate: type.email,
+            required: true, 
+            description:"Email for registering user ", 
+            error: 'Please enter a valid email address' 
+        },
+        password: { 
+            validate: type.string,
+            required: true,
+            description: "Password for registering user",
+            error: 'Please enter a password'
+        }
+    }
+ 
+    module.execute = function(res, req, params, respond){
+        
+        //Create User
 		var user = new NewUser({
 			email: params.email,
 			password: params.password
@@ -125,36 +122,53 @@ module.exports = function (type, calls, execute, config) {
 				});	
 			}
 		});
-	}
-
-	return module;
+    }
+ 
+    return module;
 };
 ```
 
-Once the task has completed inside the execute function you must use the respond callback.
+Once the task has completed inside module.execute you must use the respond callback.
 
 ```javascript
 respond(res, req, success, message, output);
 ```
 
-## Parameter Validation
+## Parameter Layout
 
-The parameters for methods must be supplied in the below format:
+Dingle will handle parameter validation for you and can be specified like so:
 
-- `GET` - URL Encoded
-- `PUT` - URL Encoded
-- `DELETE` - URL Encoded
-- `POST` - Multipart(Files) or Form URL Encoded
+- `validate` - Validation types available, see below.
+- `required` - Whether the value can be blank.
+- `description` - Parameters use in a sentance.
+- `error` - Error message which is presented if the parameter failed validation.
 
-You can use built in data types which are based on the validator module:
+```javascript
+module.params = {
+    email: { 
+        validate: type.email,
+        required: true, 
+        description:"Email for registering user ", 
+        error: 'Please enter a valid email address' 
+    },
+    password: { 
+        validate: type.string,
+        required: true,
+        description: "Password for registering user",
+        error: 'Please enter a password'
+    }
+}
+```
+
+You can use built in valiation types which are based on the validator module:
 
 ```javascript
 type.string
 type.bool
 type.float
 type.int
-type.date //Returns a JS date object
-type.file //Can only be used in POST method with multipart requests
+type.date //Returns a javascript date object
+type.file //Can only be used in POST method with multipart requests, see below
 
 type.email
 type.ip
@@ -168,51 +182,22 @@ type.card //Credit or debit card
 
 When using type.file the following Multer object is returned in the params property:
 
-- `fieldname` - Field name specified in the form
-- `originalname` - Name of the file on the user's computer
-- `name` - Renamed file name
-- `encoding` - Encoding type of the file
-- `mimetype` - Mime type of the file
-- `path` - Location of the uploaded file
-- `extension` - Extension of the file
-- `size` - Size of the file in bytes
-- `truncated` - If the file was truncated due to size limitation
-- `buffer` - Raw data (is null unless the inMemory option is true)
+- `fieldname` - Field name specified in the form.
+- `originalname` - Name of the file on the user's computer.
+- `name` - Renamed file name.
+- `encoding` - Encoding type of the file.
+- `mimetype` - Mime type of the file.
+- `path` - Location of the uploaded file.
+- `extension` - Extension of the file.
+- `size` - Size of the file in bytes.
+- `truncated` - If the file was truncated due to size limitation.
+- `buffer` - Raw data (is null unless the inMemory option is true).
 
 It's your job to manipulate, read and clean up when finished.
 
-## Additional Options
-
-There are further options which can be used as follows:
-
-```javascript
-var dingle = require('dingle')({
-	
-	//Misc
-	reload: true, //Are API calls reloaded before execution
-	path: "./public", //Path for API calls
-	
-	//App (Default from package.json)
-	app_name: 'My Awesome App',
-	app_prefix; 'MAA',
-	app_version: '0.0.2',
-	
-	//HTTP
-	http_hostname: '0.0.0.0',
-	http_port: 80,
-	
-	//HTTPS
-	https_hostname: '0.0.0.0',
-	https_port: = 443,
-	https_ssl_key: './key.pem',
-	https_ssl_cert: './cert.pem'
-});
-```
-
 ## Adding Custom Types
 
-Custom data types can be added and applied to the API parameters.
-For example:
+Custom data types can be added and applied to dingle like so:
 
 ```javascript
 var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
@@ -234,30 +219,75 @@ dingle.type.date = function(string){
 - Perform the necessary validation and throw an Error() should there be any invalidity.
 - Once the data has been validated it must be returned in the correct data type.
 
-## Callception
+## Additional Options
 
-You can execute another call from within a call using the execute function:
+There are further options which can be used as follows:
 
 ```javascript
-execute(config, req, callback(output){
-	console.log(output);
-}, params, call_name);
+var dingle = require('dingle')({
+	
+	//Paths
+	path_functions: './public', //Path storing functions
+	
+	//App (Default from package.json)
+	app_name: 'My Awesome App',
+	app_prefix; 'MAA',
+	app_version: '0.0.2',
+	
+	//HTTP
+	http_hostname: '127.0.0.1',
+	http_port: 80,
+	
+	//HTTPS
+	https_hostname: '127.0.0.1',
+	https_port: = 443,
+	https_ssl_key: './key.pem',
+	https_ssl_cert: './cert.pem',
+});
 ```
 
-The parameter call_name specifies which call to execute.
-For example with /login/post.js:
+## Executing Functions
+
+You can execute functions from within a function like so:
+
+```javascript
+execute(config, req, function(success, message, output){
+	console.log(output);
+}, params, function);
+```
+
+For example to execute the `users_forgot_username` function we can use the following:
 
 ```javascript
 module.execute = function(res, req, params, respond){
 
-    execute(config, req, function(output){
+    execute(config, req, function(success, message, output){
 	    
-		respond(res, req, true,'Result from Login_POST', output);
-	}, params, 'Login_POST');
+	    if (success){
+			respond(res, req, true,'Success result from users_forgot_username', output);
+		}else{
+			respond(res, req, true,'Error result from users_forgot_username', message);
+		}
+	
+	}, params, 'users_forgot_username');
 }
 ```
 
-## Customizatio
+We can even execute a function from outside dingle:
+
+```javascript
+var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
+
+dingle.execute(dingle.config, {}, function(success, message, output){
+    console.log(success);
+    console.log(message);
+    console.log(output);
+},{
+	email: 'admin@myawesomeapi.com'
+}, 'users_forgot_username');
+```
+
+## Customization
 
 We can access the config options dingle is running:
 
@@ -273,7 +303,7 @@ We can access information relating to the API calls loaded:
 var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
 
 dingle.calls.forEach(function(call){
-	console.log(call.name + ' ' + call.method);
+	console.log(call.name + ' ' + call.module.method);
 }
 ```
 

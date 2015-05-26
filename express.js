@@ -15,6 +15,7 @@ module.exports = function (config) {
 	app.use(parser.json());
 	app.use(parser.urlencoded({ extended: true }));
 	app.use(multer());
+	app.set('case sensitive routing', true);
 	
 	//Headers
 	app.use(function(req,res,next){

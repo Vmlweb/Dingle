@@ -1,12 +1,18 @@
 module.exports = function (config) {
     var module = {};
     var pack = require('./package.json');
+	var replace = require("replaceall");
     
 	//App
 	module.app = {};
 	module.app.name = config.app_name || pack.name;
 	module.app.prefix = config.app_prefix || pack.name.substring(0,3).toUpperCase();
 	module.app.version = config.app_version || pack.version;
+	
+	//Paths
+	module.path = {};
+	module.path.functions = config.path_functions || "./public";
+	module.path.functions = replace('/./','/',process.cwd() + '/' +  module.path.functions);
 	
 	//HTTP
 	module.http = {}
@@ -33,18 +39,5 @@ module.exports = function (config) {
 	module.udp.hostname = config.udp_hostname || '';
 	module.udp.port = config.udp_port || 7692;
 	
-	//Misc
-	module.reload = config.reload || false;
-	module.path = config.path || "./public";
-	module.path = process.cwd() + '/' +  module.path;
-	module.methods = [
-		'GET',
-		'PUT',
-		'POST',
-		'DELETE',
-		'TCP',
-		'UDP'
-	]
-
     return module;
 };
