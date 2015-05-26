@@ -357,10 +357,8 @@ You can access internal modules dingle uses to run to gain more functionality us
 - `dingle.config` - Startup configuration for dingle.
 - `dingle.calls` - Object with dingle function information.
 - `dingle.type` - Object with parameter validation types.
-
 - `dingle.express` - Express app instance.
 - `dingle.router` - Express request router.
-
 - `dingle.tcp` - Standard net TCP sever.
 - `dingle.udp` - Socket for UDP server.
 
