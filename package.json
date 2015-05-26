@@ -1,6 +1,6 @@
 {
   "name": "dingle",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "NodeJS REST API Framework",
   "main": "index.js",
   "scripts": {
@@ -36,7 +36,6 @@
     "express": "^4.12.4",
     "multer": "^0.1.8",
     "replaceall": "^0.1.6",
-    "require-reload": "^0.2.2",
     "validator": "^3.40.0",
     "wrench": "^1.5.8"
   }

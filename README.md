@@ -63,13 +63,19 @@ Also note function names ARE case sensitive.
 
 ## HTTP & HTTPS
 
-We can then execute these functions via a chosen protocol:
+To access the functions via http or https we use the URL.
 
 ```
 https://myawesomeapi.com/users_forgot_username/
 ```
 
-See more below about accessing functions in each protocol.
+For *GET, PUT and DELETE* requests use url encoded parameters to supply data to the function like so:
+
+```
+https://myawesomeapi.com/users_forgot_username/?email=admin@myawesomeapi.com&password=myawesomeapi.com
+```
+
+For *POST* requests the url encoded data must be attached to the multipart body of the request.
 
 ## Function Layout
 
@@ -160,7 +166,7 @@ module.params = {
 }
 ```
 
-You can use built in valiation types which are based on the validator module:
+You can use built in validation types which are based on the validator module:
 
 ```javascript
 type.string
@@ -178,26 +184,7 @@ type.mongo //MongoDB object id
 type.card //Credit or debit card
 ```
 
-## File Uploads
-
-When using type.file the following Multer object is returned in the params property:
-
-- `fieldname` - Field name specified in the form.
-- `originalname` - Name of the file on the user's computer.
-- `name` - Renamed file name.
-- `encoding` - Encoding type of the file.
-- `mimetype` - Mime type of the file.
-- `path` - Location of the uploaded file.
-- `extension` - Extension of the file.
-- `size` - Size of the file in bytes.
-- `truncated` - If the file was truncated due to size limitation.
-- `buffer` - Raw data (is null unless the inMemory option is true).
-
-It's your job to manipulate, read and clean up when finished.
-
-## Adding Custom Types
-
-Custom data types can be added and applied to dingle like so:
+Or custom data types can be added and applied to dingle like so:
 
 ```javascript
 var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
@@ -218,6 +205,23 @@ dingle.type.date = function(string){
 - The parameter is passed into the function as a string.
 - Perform the necessary validation and throw an Error() should there be any invalidity.
 - Once the data has been validated it must be returned in the correct data type.
+
+## File Uploads
+
+When using type.file the following Multer object is returned in the params property:
+
+- `fieldname` - Field name specified in the form.
+- `originalname` - Name of the file on the user's computer.
+- `name` - Renamed file name.
+- `encoding` - Encoding type of the file.
+- `mimetype` - Mime type of the file.
+- `path` - Location of the uploaded file.
+- `extension` - Extension of the file.
+- `size` - Size of the file in bytes.
+- `truncated` - If the file was truncated due to size limitation.
+- `buffer` - Raw data (is null unless the inMemory option is true).
+
+It's your job to manipulate, read and clean up when finished.
 
 ## Additional Options
 
