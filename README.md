@@ -1,5 +1,5 @@
 # Dingle
-Dingle is a quick and easy NodeJS framework which can be used to manage scalable API layouts.
+Dingle is a quick and easy NodeJS framework which can be used to create scalable and maintainable API layouts.
 
 ## Installation
 
@@ -13,7 +13,8 @@ $ npm install --save dingle
 	* JSON output
 	* Parameter validation
 	* File uploads
-	* Based on Express
+	* Self calling
+	* Based on ExpressJS
 
 ## Startup
 
@@ -43,10 +44,10 @@ public
 
 The filename determines which of the following methods is used:
 
-- **GET** - get.js
-- **PUT** - put.js
-- **DELETE** - delete.js
-- **POST** - post.js
+- `GET` - get.js
+- `PUT` - put.js
+- `DELETE` - delete.js
+- `POST` - post.js
 
 Each call is referred to using the following naming convention:
 
@@ -140,10 +141,10 @@ respond(res, req, success, message, output);
 
 The parameters for methods must be supplied in the below format:
 
-- **GET** - URL Encoded
-- **PUT** - URL Encoded
-- **DELETE** - URL Encoded
-- **POST** - Multipart(Files) or Form URL Encoded
+- `GET` - URL Encoded
+- `PUT` - URL Encoded
+- `DELETE` - URL Encoded
+- `POST` - Multipart(Files) or Form URL Encoded
 
 You can use built in data types which are based on the validator module:
 
@@ -165,8 +166,19 @@ type.card //Credit or debit card
 
 ## File Uploads
 
-When using type.file an array is returned in the params property.
-The array contains info about the location, size and name of the file.
+When using type.file the following Multer object is returned in the params property:
+
+- `fieldname` - Field name specified in the form
+- `originalname` - Name of the file on the user's computer
+- `name` - Renamed file name
+- `encoding` - Encoding type of the file
+- `mimetype` - Mime type of the file
+- `path` - Location of the uploaded file
+- `extension` - Extension of the file
+- `size` - Size of the file in bytes
+- `truncated` - If the file was truncated due to size limitation
+- `buffer` - Raw data (is null unless the inMemory option is true)
+
 It's your job to manipulate, read and clean up when finished.
 
 ## Additional Options
