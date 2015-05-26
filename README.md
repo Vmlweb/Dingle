@@ -97,7 +97,7 @@ You will then receive a response containing the output data.
 
 The module for each function is laid out as follows:
 
-- `module.method` - Methods available: `GET, PUT, DELETE, POST`
+- `module.method` - Methods available: `GET, PUT, DELETE, POST, TCP, UDP`
 - `module.name` - Function in a few words.
 - `module.description` - Function in a few more words.
 - `module.params` - List of parameters the function requires. (Will be validated and passed to module.execute)
@@ -354,15 +354,15 @@ dingle.execute(dingle.config, {}, function(success, message, output){
 
 You can access internal modules dingle uses to run to gain more functionality using the following:
 
-`dingle.config` - Startup configuration for dingle.
-`dingle.calls` - Object with dingle function information.
-`dingle.type` - Object with parameter validation types.
+- `dingle.config` - Startup configuration for dingle.
+- `dingle.calls` - Object with dingle function information.
+- `dingle.type` - Object with parameter validation types.
 
-`dingle.express` - Express app instance.
-`dingle.router` - Express request router.
+- `dingle.express` - Express app instance.
+- `dingle.router` - Express request router.
 
-`dingle.tcp` - Standard net TCP sever.
-`dingle.udp` - Socket for UDP server.
+- `dingle.tcp` - Standard net TCP sever.
+- `dingle.udp` - Socket for UDP server.
 
 You can access information relating to the API calls loaded:
 
