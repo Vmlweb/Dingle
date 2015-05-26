@@ -257,7 +257,7 @@ module.execute = function(res, req, params, respond){
 }
 ```
 
-## Customization
+## Customizatio
 
 We can access the config options dingle is running:
 
