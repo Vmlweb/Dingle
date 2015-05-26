@@ -10,6 +10,7 @@ $ npm install --save dingle
 ## Features
 
 	* HTTP and HTTPS
+	* TCP and UDP
 	* JSON output
 	* Parameter validation
 	* File uploads
@@ -21,7 +22,12 @@ $ npm install --save dingle
 To start dingle it requires a minimum of a hostname to listen on:
 
 ```javascript
-var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
+var dingle = require('dingle')({
+	http_hostname: '0.0.0.0',
+	https_hostname: '0.0.0.0',
+	tcp_hostname: '0.0.0.0',
+	udp_hostname: '0.0.0.0'
+});
 ```
 
 In dingle each API call is referred to as a **function**.
@@ -76,6 +82,16 @@ https://myawesomeapi.com/users_forgot_username/?email=admin@myawesomeapi.com&pas
 ```
 
 For `POST` requests the url encoded data must be attached to the multipart body of the request.
+
+## TCP & UDP
+
+To access the functions via `TCP or UDP` you must first make a connection using either protocol and send data using the following format:
+
+```
+/users_forgot_username/email=email=admin@myawesomeapi.com&password=myawesomeapi.com
+```
+
+You will then receive a response containing the output data.
 
 ## Function Layout
 
@@ -189,8 +205,14 @@ type.card //Credit or debit card
 Custom data types can be added and used in parameter validation like so:
 
 ```javascript
-var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
 var validator = require('validator');
+
+var dingle = require('dingle')({
+	http_hostname: '0.0.0.0',
+	https_hostname: '0.0.0.0',
+	tcp_hostname: '0.0.0.0',
+	udp_hostname: '0.0.0.0'
+});
 
 dingle.type.date = function(string){
 	
@@ -260,17 +282,25 @@ var dingle = require('dingle')({
 	//App (Default from package.json)
 	app_name: 'My Awesome App',
 	app_prefix; 'MAA',
-	app_version: '0.0.2',
+	app_version: '0.0.7',
 	
 	//HTTP
-	http_hostname: '127.0.0.1',
+	http_hostname: '0.0.0.0',
 	http_port: 80,
 	
 	//HTTPS
-	https_hostname: '127.0.0.1',
+	https_hostname: '0.0.0.0',
 	https_port: = 443,
 	https_ssl_key: './key.pem',
 	https_ssl_cert: './cert.pem',
+	
+	//TCP
+	tcp_hostname: '0.0.0.0',
+	tcp_port: = 7691,
+	
+	//UDP
+	udp_hostname: '0.0.0.0',
+	udp_port: = 7692
 });
 ```
 
@@ -304,7 +334,12 @@ module.execute = function(req, res, params, respond){
 We can even execute a function from outside dingle:
 
 ```javascript
-var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
+var dingle = require('dingle')({
+	http_hostname: '0.0.0.0',
+	https_hostname: '0.0.0.0',
+	tcp_hostname: '0.0.0.0',
+	udp_hostname: '0.0.0.0'
+});
 
 dingle.execute(dingle.config, {}, function(success, message, output){
     console.log(success);
@@ -317,38 +352,57 @@ dingle.execute(dingle.config, {}, function(success, message, output){
 
 ## Customization
 
-We can access the config options dingle is running:
+You can access internal modules dingle uses to run to gain more functionality using the following:
+
+`dingle.config` - Startup configuration for dingle.
+`dingle.calls` - Object with dingle function information.
+`dingle.type` - Object with parameter validation types.
+
+`dingle.express` - Express app instance.
+`dingle.router` - Express request router.
+
+`dingle.tcp` - Standard net TCP sever.
+`dingle.udp` - Socket for UDP server.
+
+You can access information relating to the API calls loaded:
 
 ```javascript
-var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
-
-console.log(dingle.config);
-```
-
-We can access information relating to the API calls loaded:
-
-```javascript
-var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
+var dingle = require('dingle')({
+	http_hostname: '0.0.0.0',
+	https_hostname: '0.0.0.0',
+	tcp_hostname: '0.0.0.0',
+	udp_hostname: '0.0.0.0'
+});
 
 dingle.calls.forEach(function(call){
 	console.log(call.name + ' ' + call.module.method);
 }
 ```
 
-We can add additional Express middleware:
+You can add additional Express middleware:
 
 ```javascript
-var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
+var dingle = require('dingle')({
+	http_hostname: '0.0.0.0',
+	https_hostname: '0.0.0.0',
+	tcp_hostname: '0.0.0.0',
+	udp_hostname: '0.0.0.0'
+});
 
 dingle.express.use(function (req, res, next) {
   next();
 });
 ```
 
-We can create additional Express routing:
+You can create additional Express routing:
 
 ```javascript
-var dingle = require('dingle')({ http_hostname: '0.0.0.0' });
+var dingle = require('dingle')({
+	http_hostname: '0.0.0.0',
+	https_hostname: '0.0.0.0',
+	tcp_hostname: '0.0.0.0',
+	udp_hostname: '0.0.0.0'
+});
 
 dingle.router.get('/about', function(req, res) {
 	res.send('About birds');

@@ -25,9 +25,9 @@ module.exports = function (config) {
 	module.https.port = config.https_port || 443;
 	module.https.ssl = {}
 	module.https.ssl.key = config.https_ssl_key || './key.pem'
-	module.https.ssl.key = process.cwd() + '/' +  module.https.ssl.key;
+	module.https.ssl.key = replace('/./','/',process.cwd() + '/' +  module.https.ssl.key);
 	module.https.ssl.cert = config.https_ssl_cert || './cert.pem';
-	module.https.ssl.cert = process.cwd() + '/' +  module.https.ssl.cert;
+	module.https.ssl.cert = replace('/./','/',process.cwd() + '/' +  module.https.ssl.cert);
 	
 	//TCP
 	module.tcp = {}

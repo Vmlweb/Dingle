@@ -12,11 +12,18 @@ module.exports = function (config, req, res, query, call) {
 	if (!call.hasOwnProperty('module')){
 
 		//Search for module
+		var found = false
 		for (current in calls){
 			current = calls[current];
 			if (call == current.name){
 				call = current
+				found = true
 			}
+		}
+		
+		//Not found
+		if (!found){
+			return respond(req, res, false, 'Function could not be found', {});
 		}
 	}
 	
