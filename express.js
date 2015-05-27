@@ -24,16 +24,18 @@ module.exports = function (config) {
 	});
 
 	//HTTP
-	if (config.http.hostname != ''){
-		http.createServer(app).listen(config.http.port, config.http.hostname);
+	if (config.http.listen != ''){
+		http.createServer(app).listen(config.http.port, config.http.listen);
+		console.log('HTTP listening at ' + config.http.listen + ':' + config.http.port);
 	}
 	
 	//HTTPS
-	if (config.https.hostname != ''){
+	if (config.https.listen != ''){
 		https.createServer({
 			key: fs.readFileSync(config.https.ssl.key),
 			cert: fs.readFileSync(config.https.ssl.cert)
-		}, app).listen(config.https.port, config.https.hostname);
+		}, app).listen(config.https.port, config.https.listen);
+		console.log('HTTPS listening at ' + config.https.listen + ':' + config.https.port);
 	}
 	
     return app;

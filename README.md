@@ -12,6 +12,7 @@ $ npm install --save dingle
 	* HTTP and HTTPS
 	* TCP and UDP
 	* JSON output
+	* Client code generation
 	* Parameter validation
 	* File uploads
 	* Execute functions
@@ -19,14 +20,14 @@ $ npm install --save dingle
 
 ## Startup
 
-To start dingle it requires a minimum of a hostname to listen on:
+To start dingle it requires a minimum of an ip to listen on:
 
 ```javascript
 var dingle = require('dingle')({
-	http_hostname: '0.0.0.0',
-	https_hostname: '0.0.0.0',
-	tcp_hostname: '0.0.0.0',
-	udp_hostname: '0.0.0.0'
+	http_listen: '0.0.0.0',
+	https_listen: '0.0.0.0',
+	tcp_listen: '0.0.0.0',
+	udp_listen: '0.0.0.0'
 });
 ```
 
@@ -206,10 +207,10 @@ Custom data types can be added and used in parameter validation like so:
 var validator = require('validator');
 
 var dingle = require('dingle')({
-	http_hostname: '0.0.0.0',
-	https_hostname: '0.0.0.0',
-	tcp_hostname: '0.0.0.0',
-	udp_hostname: '0.0.0.0'
+	http_listen: '0.0.0.0',
+	https_listen: '0.0.0.0',
+	tcp_listen: '0.0.0.0',
+	udp_listen: '0.0.0.0'
 });
 
 dingle.type.date = function(string){
@@ -276,6 +277,7 @@ var dingle = require('dingle')({
 	
 	//Paths
 	path_functions: './public', //Path storing functions
+	path_exports: './export', //Path to build client code into
 	
 	//App (Default from package.json)
 	app_name: 'My Awesome App',
@@ -283,21 +285,25 @@ var dingle = require('dingle')({
 	app_version: '0.0.7',
 	
 	//HTTP
-	http_hostname: '0.0.0.0',
+	http_hostname: 'myawesomeapi.com',
+	http_listen: '0.0.0.0',
 	http_port: 80,
 	
 	//HTTPS
-	https_hostname: '0.0.0.0',
+	https_hostname: 'myawesomeapi.com',
+	https_listen: '0.0.0.0',
 	https_port: = 443,
 	https_ssl_key: './key.pem',
 	https_ssl_cert: './cert.pem',
 	
 	//TCP
-	tcp_hostname: '0.0.0.0',
+	tcp_hostname: 'myawesomeapi.com',
+	tcp_listen: '0.0.0.0',
 	tcp_port: = 7691,
 	
 	//UDP
-	udp_hostname: '0.0.0.0',
+	udp_hostname: 'myawesomeapi.com',
+	udp_listen: '0.0.0.0',
 	udp_port: = 7692
 });
 ```
@@ -333,10 +339,10 @@ We can even execute a function from outside dingle:
 
 ```javascript
 var dingle = require('dingle')({
-	http_hostname: '0.0.0.0',
-	https_hostname: '0.0.0.0',
-	tcp_hostname: '0.0.0.0',
-	udp_hostname: '0.0.0.0'
+	http_listen: '0.0.0.0',
+	https_listen: '0.0.0.0',
+	tcp_listen: '0.0.0.0',
+	udp_listen: '0.0.0.0'
 });
 
 dingle.execute(dingle.config, {}, function(success, message, output){
@@ -364,10 +370,10 @@ You can access information relating to the API calls loaded:
 
 ```javascript
 var dingle = require('dingle')({
-	http_hostname: '0.0.0.0',
-	https_hostname: '0.0.0.0',
-	tcp_hostname: '0.0.0.0',
-	udp_hostname: '0.0.0.0'
+	http_listen: '0.0.0.0',
+	https_listen: '0.0.0.0',
+	tcp_listen: '0.0.0.0',
+	udp_listen: '0.0.0.0'
 });
 
 dingle.calls.forEach(function(call){
@@ -379,10 +385,10 @@ You can add additional Express middleware:
 
 ```javascript
 var dingle = require('dingle')({
-	http_hostname: '0.0.0.0',
-	https_hostname: '0.0.0.0',
-	tcp_hostname: '0.0.0.0',
-	udp_hostname: '0.0.0.0'
+	http_listen: '0.0.0.0',
+	https_listen: '0.0.0.0',
+	tcp_listen: '0.0.0.0',
+	udp_listen: '0.0.0.0'
 });
 
 dingle.express.use(function (req, res, next) {
@@ -394,10 +400,10 @@ You can create additional Express routing:
 
 ```javascript
 var dingle = require('dingle')({
-	http_hostname: '0.0.0.0',
-	https_hostname: '0.0.0.0',
-	tcp_hostname: '0.0.0.0',
-	udp_hostname: '0.0.0.0'
+	http_listen: '0.0.0.0',
+	https_listen: '0.0.0.0',
+	tcp_listen: '0.0.0.0',
+	udp_listen: '0.0.0.0'
 });
 
 dingle.router.get('/about', function(req, res) {

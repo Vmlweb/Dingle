@@ -14,7 +14,7 @@ module.exports = function (config) {
 	//Get files
 	files = wrench.readdirSyncRecursive(config.path.functions);
 	for (file in files){
-		file = config.path.functions + '/' + files[file];
+		file = path.join(config.path.functions,files[file]);
 		
 		//Directory
 		if (fs.lstatSync(file).isDirectory()){

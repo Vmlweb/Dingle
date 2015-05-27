@@ -1,47 +1,41 @@
-/*var fs = require('fs');
+var fs = require('fs');
 var wrench = require('wrench');
 var path = require('path');
-var replace = require("replaceall");
-var val = require('validator');
-var caps = require('change-case');
 
-var type = require('./type');
-var execute = require('./execute');
-
-module.exports = function (config) {
-    var module = [];
+module.exports = function (config, type, calls, generator, name) {
+	var dir = path.join(config.path.generate,name);
 	
-	//Get files
-	files = wrench.readdirSyncRecursive(config.path.functions);
-	for (file in files){
-		file = config.path.functions + '/' + files[file];
+	//Remove
+	wrench.rmdirSyncRecursive(dir, false);
+	
+	//Setup
+	generator.setup(config, type, dir, calls);
+	
+	//Each call
+	for (call in calls){
+		call = calls[call];
 		
-		//Directory
-		if (fs.lstatSync(file).isDirectory()){
-			continue;
-		}
-		
-		//Check extension
-		if (!val.equals(path.extname(file),'.js')){
-			continue;
-		}
+		if (generator.methods.indexOf(call.module.method) > -1) {
 			
-		//Construct name
-		var name = replace('/',' ',url);
-		name = caps.pascalCase(name) + '_' + method;
-		name = replace(' ','',name);
-		if (name.charAt(0) == '_'){
-			name = name.substring(1);
-		}
+			//Hostname
+			var hostname = '';
+			if (config.https.listen != '' && config.https.hostname != '' && (call.module.method == 'GET' || call.module.method == 'PUT' || call.module.method == 'DELETE' || call.module.method == 'POST')){
+				hostname = 'https://' + path.join(config.https.hostname + ':' + config.https.port, call.name);
 		
-		//Require
-		var call = {}
-		call.module = require(file)(type, module, execute, config);
-		call.method = path.basename(file,path.extname(file)).toUpperCase();
-		call.path = file;
-		call.name = name;
-		module.push(call);
+			}else if (config.http.listen != '' && config.http.hostname != '' && (call.module.method == 'GET' || call.module.method == 'PUT' || call.module.method == 'DELETE' || call.module.method == 'POST')){
+				hostname = 'http://' + path.join(config.http.hostname + ':' + config.http.port, call.name);
+				
+			}else if (config.tcp.listen != '' && config.tcp.hostname != '' && call.module.method == 'TCP'){
+				hostname = 'tcp://' + path.join(config.tcp.hostname + ':' + config.tcp.port, call.name);
+				
+			}else if (config.udp.listen != '' && config.udp.hostname != '' && call.module.method == 'UDP'){
+				hostname = 'udp://' + path.join(config.udp.hostname + ':' + config.udp.port, call.name);
+		
+			}else{
+				continue;
+			}
+			
+			generator.generate(config, type, dir, call, hostname);
+		}
 	}
-
-    return module;
-};*/
+};

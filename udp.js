@@ -11,9 +11,10 @@ module.exports = function (config, calls) {
 	//Bind
     server.bind(config.udp.port,function(){
 	    try{
-	   		server.addMembership(config.udp.hostname);
+	   		server.addMembership(config.udp.ip);
+	   		console.log('UDP listening at ' + config.udp.listen + ':' + config.udp.port);
 	    }catch(error){
-		    
+		    console.log('UDP listening at 0.0.0.0:' + config.udp.port);
 	    }
 	});
 	

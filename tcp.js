@@ -38,7 +38,8 @@ module.exports = function (config, calls) {
 		    }, params, name);
 	    });
 	    
-	}).listen(config.tcp.port, config.tcp.hostname);
+	}).listen(config.tcp.port, config.tcp.listen);
+	   console.log('TCP listening at ' + config.tcp.listen + ':' + config.tcp.port);
 
     return server;
 };
