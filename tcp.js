@@ -1,4 +1,5 @@
 var net = require('net');
+var fs = require('fs');
 var val = require('validator');
 var querystring = require('querystring');
 

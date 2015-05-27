@@ -230,7 +230,7 @@ dingle.type.date = function(string){
 
 ## File Uploads
 
-When using type.file the following Multer object is returned in the params property:
+When uploading files using the `POST` method the following Multer object is returned in the params property:
 
 - `fieldname` - Field name specified in the form.
 - `originalname` - Name of the file on the user's computer.
@@ -247,7 +247,7 @@ It's your job to manipulate, read and clean up when finished.
 
 ## File Downloads
 
-Files can be downloaded from a function using the express response object like so:
+When using `HTTP or HTTPS` files can be downloaded from a function using the express response object like so:
 
 ```javascript
 module.execute = function(req, res, params, respond){    
