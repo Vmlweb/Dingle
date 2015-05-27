@@ -357,8 +357,7 @@ dingle.execute(dingle.config, {}, function(success, message, output){
 ## Code Generation
 
 You can use the following call to generate client side code or frameworks based on the functions in dingle.
-Each generator is stored in a module and must be installed before use.
-Then simply specify the module name as a string to build the files like so:
+Then simply specify the generation module name as a string to build the files like so:
 
 ```javascript
 var dingle = require('dingle')({
@@ -371,7 +370,7 @@ var dingle = require('dingle')({
 dingle.generate('my-generation-module');
 ```
 
-The official generation modules are listed below and must be npm installed before hand:
+The official generation modules are listed below:
 
   * [Swift Alamofire](https://github.com/Vmlweb/Dingle-Swift-Alamofire)
 	
