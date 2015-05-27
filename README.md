@@ -354,6 +354,53 @@ dingle.execute(dingle.config, {}, function(success, message, output){
 }, 'users_forgot_username');
 ```
 
+## Code Generation
+
+You can use the following call to generate client side code or frameworks based on the functions in dingle.
+Each generator is stored in a module and must be installed before use. Then simply specify the module name as a string to build the files.
+
+```javascript
+var dingle = require('dingle')({
+	http_listen: '0.0.0.0',
+	https_listen: '0.0.0.0',
+	tcp_listen: '0.0.0.0',
+	udp_listen: '0.0.0.0'
+});
+
+dingle.generate('my-generation-module');
+```
+
+The official generation modules are listed below and must be npm installed before hand:
+
+	* [Swift Alamofire](https://github.com/Vmlweb/Dingle-Swift-Alamofire)
+	
+## Custom Code Generators
+
+You can also create your own code generator module for languages which you require with the following layout:
+
+- `methods` - Array of methods this module can export.
+- `setup` - Executed once when generation begins.
+- `generate` - Executed once per function.
+
+```javascript
+module.exports.methods = [ "GET", "PUT", "DELETE", "POST" ];
+
+//Setup
+module.exports.setup = function(config, type, dir, functions){
+
+}
+	
+//Each Call
+module.exports.generate = function(config, type, dir, func, hostname){
+
+}
+```
+
+- `dir` - Working directory where files should be created.
+- `func` - Object containing information for a function.
+- `functions` - List of all func objects.
+- `hostname` - URL to access the server, including protocol, paths and function names.
+
 ## Customization
 
 You can access internal modules dingle uses to run to gain more functionality using the following properties:
