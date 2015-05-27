@@ -1,5 +1,5 @@
 # Dingle
-Dingle is a quick and easy NodeJS framework which can be used to create scalable and maintainable API layouts.
+Dingle is a quick and easy NodeJS module which can be used to create scalable and maintainable API layouts.
 
 ## Installation
 
