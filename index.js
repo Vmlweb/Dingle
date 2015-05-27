@@ -2,7 +2,7 @@ require('./misc');
 
 module.exports = function (config) {
     var module = {};
-        
+        	
 	module.config = require('./config')(config);
 	module.type = require('./type');
 	module.execute = require('./execute');
@@ -12,8 +12,8 @@ module.exports = function (config) {
     module.router = require('./router')(module.config, module.calls, module.express);
 
 	//Generate
-    module.generate = function (name, generator){
-		require('./generate')(module.config, module.type, module.calls, generator, name);   
+    module.generate = function (generator){
+		require('./generate')(module.config, module.type, module.calls, generator);   
     }
 
 	//TCP
