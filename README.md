@@ -73,7 +73,7 @@ Also note function names ARE case sensitive.
 
 ## HTTP & HTTPS
 
-To access the functions via `HTTP or HTTPS` we use the URL.
+To access the functions via `HTTP or HTTPS` we use the URL:
 
 ```
 https://myawesomeapi.com/users_forgot_username/
