@@ -1,5 +1,6 @@
 module.exports = function (config) {
     var module = {};
+    
     var pack = require('./package.json');
 	var replace = require("replaceall");
 	var path = require('path');
@@ -9,13 +10,8 @@ module.exports = function (config) {
 	module.app.name = config.app_name || pack.name;
 	module.app.prefix = config.app_prefix || pack.name.substring(0,3).toUpperCase();
 	module.app.version = config.app_version || pack.version;
-	
-	//Paths
-	module.path = {};
-	module.path.functions = config.path_functions || "./public";
-	module.path.functions = path.join(process.cwd(), module.path.functions);
-	module.path.generate = config.path_exports || "./export";
-	module.path.generate = path.join(process.cwd(), module.path.generate);
+	module.app.path = config.app.path || "./public";
+	module.app.path = path.join(process.cwd(), module.app.path);
 	
 	//HTTP
 	module.http = {};

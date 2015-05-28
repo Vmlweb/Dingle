@@ -1,11 +1,8 @@
 var net = require('net');
-var fs = require('fs');
 var val = require('validator');
-var querystring = require('querystring');
+var query = require('querystring');
 
-var execute = require('./execute');
-
-module.exports = function (config, calls) {
+module.exports = function (config, functions) {
     var module = {};
 	
 	//Create server
@@ -15,27 +12,29 @@ module.exports = function (config, calls) {
 	    	//Parts
 	    	var parts = data.toString().split('/');
 	    	if (parts.length != 3){
+		    	socket.write(JSON.stringify({success: false, message: 'Invalid message format', output: {}}));
 		    	return;
 	    	}
 	    	var name = parts[1];
-	    	var params = querystring.parse(val.stripLow(parts[2]));
+	    	var params = query.parse(val.stripLow(parts[2]));
 	    	
-	    	//Check method
-	    	var found = false;
-			for (current in calls){
-				current = calls[current];
-				if (name == current.name && current.module.method == 'TCP'){
-					found = true;
+	    	//Find Function
+			if (functions.hasOwnProperty(name)){
+				var func = functions[name];
+				
+				//Check Methods
+				if (func.methods.indexOf('TCP') != -1){
+					
+					//Execute Function
+					func.run(params, function(success, message, output){
+						socket.write(JSON.stringify({success: success, message: message, output: output}));
+					}, socket);
+				}else{
+					socket.write(JSON.stringify({success: false, message: 'Function could not be found', output: {}}));
 				}
+			}else{
+				socket.write(JSON.stringify({success: false, message: 'Function could not be found', output: {}}));
 			}
-			if (!found){
-				name = '';
-			}
-	    	
-	    	//Execute
-	    	execute(config, {}, function(success, message, output){
-	    		socket.write(JSON.stringify({success: success, message: message, output: output}));
-		    }, params, name);
 	    });
 	    
 	}).listen(config.tcp.port, config.tcp.listen);

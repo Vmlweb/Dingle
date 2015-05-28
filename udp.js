@@ -1,12 +1,10 @@
+var net = require('net');
 var val = require('validator');
-var querystring = require('querystring');
+var query = require('querystring');
+var server = require("dgram").createSocket('udp4');
 
-var execute = require('./execute');
-
-module.exports = function (config, calls) {
+module.exports = function (config, functions) {
     var module = {};
-	
-	var server = require("dgram").createSocket('udp4');
 	
 	//Bind
     server.bind(config.udp.port,function(){
@@ -21,34 +19,36 @@ module.exports = function (config, calls) {
 	//Create server
 	server.on('message', function(data, info) {
 		
-    	//Parts
+		//Parts
     	var parts = data.toString().split('/');
     	if (parts.length != 3){
+				var response = new Buffer(JSON.stringify({success: false, message: 'Function could not be found', output: {}}));
+				server.send(response, 0, response.length, info.port, info.address);
 	    	return;
     	}
     	var name = parts[1];
-    	var params = querystring.parse(val.stripLow(parts[2]));
+    	var params = query.parse(val.stripLow(parts[2]));
     	
-    	//Check method
-    	var found = false;
-		for (current in calls){
-			current = calls[current];
-			if (name == current.name && current.module.method == 'UDP'){
-				found = true;
-			}
-		}
-		if (!found){
-			name = '';
-		}
-    	
-    	//Execute
-    	execute(config, {}, function(success, message, output){
-	    	
-	    	//Response
-	    	var result = new Buffer(JSON.stringify({success: success, message: message, output: output}));
-	    	server.send(result, 0, result.length, info.port, info.address);
+    	//Find Function
+		if (functions.hasOwnProperty(name)){
+			var func = functions[name];
 			
-	    }, params, name);
+			//Check Methods
+			if (func.methods.indexOf('TCP') != -1){
+				
+				//Execute Function
+				func.run(params, function(success, message, output){
+					var response = new Buffer(JSON.stringify({success: success, message: message, output: output}));
+					server.send(response, 0, response.length, info.port, info.address);
+				}, info);
+			}else{
+				var response = new Buffer(JSON.stringify({success: false, message: 'Function could not be found', output: {}}));
+				server.send(response, 0, response.length, info.port, info.address);
+			}
+		}else{
+			var response = new Buffer(JSON.stringify({success: false, message: 'Function could not be found', output: {}}));
+			server.send(response, 0, response.length, info.port, info.address);
+		}
     });
 
     return server;
