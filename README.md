@@ -1,4 +1,5 @@
-# Dingle
+[![Dingle Logo](http://vmlweb.co.uk/Images/Projects/dingle_plain.png)](https://www.npmjs.com/package/dingle)
+
 Dingle is a quick and easy NodeJS module which can be used to create scalable and maintainable API layouts.
 
 ## Installation
@@ -9,14 +10,14 @@ $ npm install --save dingle
 
 ## Features
 
-	* HTTP and HTTPS
-	* TCP and UDP
-	* JSON output
-	* Client code generation
-	* Parameter validation
-	* File uploads
-	* Execute functions
-	* Based on ExpressJS
+  * HTTP and HTTPS
+  * TCP and UDP
+  * JSON output
+  * Client code generation
+  * Parameter validation
+  * File uploads
+  * Execute functions
+  * Based on ExpressJS
 
 ## Startup
 
