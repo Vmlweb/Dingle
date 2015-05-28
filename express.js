@@ -17,7 +17,7 @@ module.exports = function (config, functions) {
 	//Middleware
 	app.use(parser.json());
 	app.use(parser.urlencoded({ extended: true }));
-	app.use(multer({ dest: './uploads/'}))
+	app.use(multer({ dest: config.path.downloads}))
 	app.set('case sensitive routing', true);
 	app.set('trust proxy', false);
 	
@@ -25,6 +25,12 @@ module.exports = function (config, functions) {
 	app.use(function(req,res,next){
 	    res.setHeader('X-Powered-By', 'Dingle');
 	    next();
+	});
+	
+	//Errors
+	app.all('/',function(req, res, next){
+		res.status(404).json({ success: false, message: 'Function could not be found', output: {} });
+		next();
 	});
 
 	//HTTP
@@ -59,9 +65,10 @@ module.exports = function (config, functions) {
 				func.run(params, function(success, message, output, download){
 					if (success){
 						if (download){
+							download = path.join(config.path.downloads,download);
 							fs.exists(download, function(exists){
 								if (exists){
-									res.status(200).download(path.join(config.app.path,download));
+									res.status(200).download(download);
 								}else{
 									res.status(200).json({ success: success, message: message, output: output });
 									next();

@@ -143,10 +143,16 @@ The module for each function is laid out as follows:
 - `exports.brief` - Function in a few words.
 - `exports.description` - Function in a few more words.
 - `exports.methods` - Array of methods to broadcast this function on: `TCP, UDP & HTTP Methods`
+
+The parameter object layout goes like so:
+
 - `exports.params` - Object of parameters the function requires.
 - `exports.params[].description` - Parameter in a sentance.
 - `exports.params[].required` - Boolean whether parameter is required. (If false and no value given parameter will be an empty string)
 - `exports.params[].validator` - Function used to validate parameter. Throw an error if not valid and return object in the correct data type.
+
+The parameter object layout goes like so:
+
 - `exports.execute` - Array of series functions to execute when the function is called upon.
 - `exports.execute[](response)` - Object containing message and output property which will be returned from the function.
 - `exports.execute[](params)` - Object of validated parameters given from exports.params.
@@ -257,7 +263,9 @@ There are further options which can be used as follows:
 - `app_name` - Long name of your app.
 - `app_prefix` - Abbreviation which are used for exports when compiling code.
 - `app_version` - Version of your app.
-- `app_path` - Path to find dingle functions.
+- `path_functions` - Default path for all functions.
+- `path_downloads` - Default path for download files.
+- `path_uploads` - Default path for upload files.
 - `*_hostname` - Publicly accessible hostname or IP.
 - `*_listen` - Local hostname or IP to listen on.
 - `*_port` - Port to listen at.
@@ -269,7 +277,11 @@ var dingle = require('dingle')({
 	app_name: 'My Awesome App',
 	app_prefix; 'MAA',
 	app_version: '0.0.7',
-	app_path: './public',
+	
+	//Paths
+	path_functions: './public',
+	path_downloads: './downloads',
+	path_uploads: './uploads',
 	
 	//HTTP
 	http_hostname: 'myawesomeapi.com',

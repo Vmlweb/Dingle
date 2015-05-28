@@ -9,8 +9,8 @@ module.exports = function (config) {
     var module = {};
 	
 	//Get files
-	wrench.readdirSyncRecursive(config.app.path).forEach(function (file){
-		file = path.join(config.app.path,file);
+	wrench.readdirSyncRecursive(config.path.functions).forEach(function (file){
+		file = path.join(config.path.functions,file);
 		
 		//Check extension
 		if (!val.equals(path.extname(file),'.js')){
@@ -22,7 +22,7 @@ module.exports = function (config) {
 		call.path = file;
 		
 		//Construct name
-		call.name = replace(config.app.path,'',file);
+		call.name = replace(config.path.functions,'',file);
 		call.name = replace(path.extname(call.name),'',call.name);
 		call.name = replace('/','_',call.name);
 		if (call.name.charAt(0) == '_'){
@@ -36,7 +36,7 @@ module.exports = function (config) {
 		if (!call.hasOwnProperty('params')){ call.params = {} }
 		if (!call.hasOwnProperty('execute')){
 			call.execute = [];
-			call.execute[0] = function(response, params, info, next){ next('Could not find execution function', response, params, info); }
+			call.execute[0] = function(response, params, info, temp, next){ next('Could not find execution function', response, params, info); }
 		}
 		
 		//Param Blanks
@@ -66,7 +66,7 @@ module.exports = function (config) {
 					}
 					
 					//Validate
-					valid_params[param] = call.params[param].validator(params[param]);
+					valid_params[param] = call.params[param].validator(params[param], 'Please enter a valid ' + param);
 				}
 				
 				//Construct info

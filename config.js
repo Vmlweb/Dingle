@@ -10,8 +10,15 @@ module.exports = function (config) {
 	module.app.name = config.app_name || pack.name;
 	module.app.prefix = config.app_prefix || pack.name.substring(0,3).toUpperCase();
 	module.app.version = config.app_version || pack.version;
-	module.app.path = config.app.path || "./public";
-	module.app.path = path.join(process.cwd(), module.app.path);
+	
+	//Paths
+	module.path = {}
+	module.path.functions = config.path_path || "./public";
+	module.path.functions = path.join(process.cwd(), module.path.functions);
+	module.path.downloads = config.path_downloads || "./downloads";
+	module.path.downloads = path.join(process.cwd(), module.path.downloads);
+	module.path.uploads = config.path_uploads || "./uploads";
+	module.path.uploads = path.join(process.cwd(), module.path.uploads);
 	
 	//HTTP
 	module.http = {};
