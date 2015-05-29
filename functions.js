@@ -8,7 +8,7 @@ var val = require('validator');
 module.exports = function (config) {
     var module = {};
 	
-	//Get files
+	//Loop files
 	wrench.readdirSyncRecursive(config.path.functions).forEach(function (file){
 		file = path.join(config.path.functions,file);
 		
