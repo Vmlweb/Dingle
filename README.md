@@ -19,6 +19,7 @@ $ npm install --save dingle
 
   * [Dingle Validator](https://github.com/Vmlweb/Dingle-Validator) - Preset list of parameter validation functions
   
+  * [Dingle Javascript NodeJS](https://github.com/Vmlweb/Dingle-Javascript-NodeJS) - Javascript + NodeJS code generator.
   * [Dingle Swift Alamofire](https://github.com/Vmlweb/Dingle-Swift-Alamofire) - Swift + Alamofire code generator.
 
 ## Startup
