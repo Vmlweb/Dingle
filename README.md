@@ -76,12 +76,6 @@ Also note function names ARE case sensitive.
 To access the functions via `HTTP or HTTPS` we use the URL:
 
 ```
-https://myawesomeapi.com/users_forgot_username/
-```
-
-For `GET, PUT and DELETE` requests use url encoded parameters to supply data to the function like so:
-
-```
 https://myawesomeapi.com/users_forgot_username/?email=admin@myawesomeapi.com&password=myawesomeapi.com
 ```
 
@@ -96,6 +90,12 @@ To access the functions via `TCP or UDP` you must first make a connection using 
 ## Basic Function
 
 The module for each function is laid out as follows:
+
+- `exports.brief` - Function in a few words.
+- `exports.description` - Function in a few more words.
+- `exports.methods` - Array of methods to broadcast this function on: `TCP, UDP & HTTP Methods`
+- `exports.params` - Object of parameters the function requires.
+- `exports.execute` - Array of series functions to execute when the function is called upon.
 
 ```javascript
 //Setup
@@ -114,7 +114,7 @@ exports.params.password = {
 
 //Execution
 exports.execute = [];
-exports.execute[0] = function(response, params, info, temp, next){
+exports.execute[0] = function(response, params, info, next){
 	
 	//Create User
 	var user = new NewUser({
@@ -125,12 +125,12 @@ exports.execute[0] = function(response, params, info, temp, next){
 	//Save User to MongoDB
 	user.save(function (error){
 		if (error){
-			next(error, response, params, info, temp);
+			next(error, response, params, info);
 		}else{
 			//Add user to response
 			response.output.user_id = user._id;
 			
-			next(null, response, params, info, temp);
+			next(null, response, params, info);
 		}
 	});
 }
@@ -138,26 +138,19 @@ exports.execute[0] = function(response, params, info, temp, next){
 
 ## Advanced Function
 
-The module for each function is laid out as follows:
-
-- `exports.brief` - Function in a few words.
-- `exports.description` - Function in a few more words.
-- `exports.methods` - Array of methods to broadcast this function on: `TCP, UDP & HTTP Methods`
-
 The parameter object layout goes like so:
 
-- `exports.params` - Object of parameters the function requires.
-- `exports.params[].description` - Parameter in a sentance.
+- `exports.params[].description` - Parameter in a sentence.
 - `exports.params[].required` - Boolean whether parameter is required. (If false and no value given parameter will be an empty string)
 - `exports.params[].validator` - Function used to validate parameter. Throw an error if not valid and return object in the correct data type.
 
-The parameter object layout goes like so:
+The execute object layout goes like so:
 
-- `exports.execute` - Array of series functions to execute when the function is called upon.
 - `exports.execute[](response)` - Object containing message and output property which will be returned from the function.
 - `exports.execute[](params)` - Object of validated parameters given from exports.params.
-- `exports.execute[](info)` - Holds the users IP address (info.address) and list of functions in dingle (info.functions).
-- `exports.execute[](temp)` - Empty object for passing temporary objects down the function array.
+- `exports.execute[](info.address)` - Holds the users IP address of the user.
+- `exports.execute[](info.functions)` - List of functions in dingle and functions to execute them. (See below)
+- `exports.execute[](info.temp)` - Blank object to store temp data being passed through the functions.
 - `exports.execute[](next)` - Function to call to move onto the next item in the function array. The first parameter is either null to continue executing or an error string to stop execution and return the error message.
 
 ```javascript
@@ -197,10 +190,10 @@ exports.params.news = {
 
 //Execution
 exports.execute = [];
-exports.execute[0] = function(response, params, info, temp, next){
+exports.execute[0] = function(response, params, info, next){
 	
 	//Create User
-	temp.user = new NewUser({
+	info.temp.user = new NewUser({
 		email: params.email,
 		password: params.password
 	});
@@ -208,19 +201,63 @@ exports.execute[0] = function(response, params, info, temp, next){
 	//Add user to response
 	response.output.user_id = user._id;
 	
-	next(null, response, params, info, temp);
+	next(null, response, params, info);
 }
-exports.execute[1] = function(response, params, info, temp, next){
+exports.execute[1] = function(response, params, info, next){
 	
 	//Save User to MongoDB
-	temp.user.save(function (error){
+	info.temp.user.save(function (error){
 		if (error){
-			next(error, response, params, info, temp);
+			next(error, response, params, info);
 		}else{
-			next(null, response, params, info, temp);
+			next(null, response, params, info);
 		}
 	});
 }
+```
+
+## Executing Functions
+
+You can execute functions from within another function using the info.functions object like so:
+
+```javascript
+exports.execute[0] = function(response, params, info, next){
+	
+	info.functions['users_forgot_username'].run(params, function(success, message, output){
+		
+		//Collect result from function
+		response.message = message;
+		response.output = output;
+		
+		//Respond with result
+		if (success){
+			next(null, response, params, info);
+		}else{
+			next(message, response, params, info);
+		}
+		
+	});
+}
+```
+
+We can even execute a function from outside dingle:
+
+```javascript
+var dingle = require('dingle')({
+	http_listen: '0.0.0.0',
+	https_listen: '0.0.0.0',
+	tcp_listen: '0.0.0.0',
+	udp_listen: '0.0.0.0'
+});
+
+dingle.functions['users_forgot_username'].run({
+	email: 'admin@myawesomeapi.com',
+	password: 'myawesomepassword',
+}, function(success, message, output){
+	console.log(success);
+	console.log(message);
+	console.log(output);
+});
 ```
 
 ## File Downloads
@@ -228,12 +265,12 @@ exports.execute[1] = function(response, params, info, temp, next){
 When using `HTTP or HTTPS` files can be downloaded from a function using the download property like so:
 
 ```javascript
-exports.execute[0] = function(response, params, info, temp, next){
+exports.execute[0] = function(response, params, info, next){
 	
 	//Download README.md
 	response.download = './README.md';
 	
-	next(null, response, params, info, temp);
+	next(null, response, params, info);
 }
 ```
 
@@ -307,50 +344,6 @@ var dingle = require('dingle')({
 });
 ```
 
-## Executing Functions
-
-You can execute functions from within another function using the info.functions object like so:
-
-```javascript
-exports.execute[0] = function(response, params, info, temp, next){
-	
-	info.functions['users_forgot_username'].run(params, function(success, message, output){
-		
-		//Collect result from function
-		response.message = message;
-		response.output = output;
-		
-		//Respond with result
-		if (success){
-			next(null, response, params, info, temp);
-		}else{
-			next(message, response, params, info, temp);
-		}
-		
-	});
-}
-```
-
-We can even execute a function from outside dingle:
-
-```javascript
-var dingle = require('dingle')({
-	http_listen: '0.0.0.0',
-	https_listen: '0.0.0.0',
-	tcp_listen: '0.0.0.0',
-	udp_listen: '0.0.0.0'
-});
-
-dingle.functions['users_forgot_username'].run({
-	email: 'admin@myawesomeapi.com',
-	password: 'myawesomepassword',
-}, function(success, message, output){
-	console.log(success);
-	console.log(message);
-	console.log(output);
-});
-```
-
 ## Customization
 
 You can access internal modules dingle uses to run to gain more functionality using the following properties:
@@ -360,3 +353,14 @@ You can access internal modules dingle uses to run to gain more functionality us
 - `express` - Express app instance.
 - `tcp` - Standard net TCP sever.
 - `udp` - Socket for UDP server.
+
+```javascript
+var dingle = require('dingle')({
+	http_listen: '0.0.0.0',
+	https_listen: '0.0.0.0',
+	tcp_listen: '0.0.0.0',
+	udp_listen: '0.0.0.0'
+});
+
+console.log(dingle.functions);
+```
