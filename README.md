@@ -141,7 +141,7 @@ exports.execute[0] = function(response, params, info, next){
 The parameter object layout goes like so:
 
 - `exports.params[].description` - Parameter in a sentence.
-- `exports.params[].required` - Boolean whether parameter is required. (If false and no value given parameter will be an empty string)
+- `exports.params[].required` - Boolean whether parameter is required. (If false and no value given param will be an null value)
 - `exports.params[].validator` - Function used to validate parameter. Throw an error if not valid and return object in the correct data type.
 
 The execute object layout goes like so:
