@@ -60,7 +60,7 @@ module.exports = function (config) {
 						if (call.params[param].required){
 							throw "Please enter a " + param;
 						}else{
-							params[param] = '';
+							valid_params[param] = null;
 							continue;
 						}
 					}
