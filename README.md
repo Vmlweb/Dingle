@@ -113,8 +113,7 @@ exports.params.password = {
 }
 
 //Execution
-exports.execute = [];
-exports.execute[0] = function(response, params, info, next){
+exports.execute = [function(response, params, info, next){
 	
 	//Create User
 	var user = new NewUser({
@@ -133,7 +132,7 @@ exports.execute[0] = function(response, params, info, next){
 			next(null, response, params, info);
 		}
 	});
-}
+}];
 ```
 
 ## Advanced Function
