@@ -17,7 +17,7 @@ module.exports = function (config, functions) {
 	//Middleware
 	app.use(parser.json());
 	app.use(parser.urlencoded({ extended: true }));
-	app.use(multer({ dest: config.path.downloads}))
+	app.use(multer({ dest: config.path.uploads}))
 	app.set('case sensitive routing', true);
 	app.set('trust proxy', false);
 	
