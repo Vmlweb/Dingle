@@ -36,7 +36,7 @@ module.exports = function (config) {
 		if (!call.hasOwnProperty('params')){ call.params = {} }
 		if (!call.hasOwnProperty('execute')){
 			call.execute = [];
-			call.execute[0] = function(response, params, info, temp, next){ next('Could not find execution function', response, params, info); }
+			call.execute[0] = function(response, params, info, next){ next('Could not find execution function', response, params, info); }
 		}
 		
 		//Param Blanks
@@ -72,6 +72,7 @@ module.exports = function (config) {
 				//Construct info
 				var add = add || {};
 				var info = {};
+				info.temp = {};
 				
 				//Populate info
 				info.functions = module;
@@ -89,7 +90,7 @@ module.exports = function (config) {
 				}
 				
 				//Execute
-				var execution = [function(next){ next(null, {message: 'Successful', output: {}}, valid_params, info, {}); }]
+				var execution = [function(next){ next(null, {message: 'Successful', output: {}}, valid_params, info); }]
 				async.waterfall(execution.concat(call.execute), function (error, response) {
 					if (error){
 						callback(false, error, response.output, response.download);
