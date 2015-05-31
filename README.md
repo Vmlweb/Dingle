@@ -15,9 +15,10 @@ $ npm install --save dingle
   * File Download & Uploads
   * JSON Input & Output
   
-## Additional Modules
+## Generators
 
-  * [Dingle Validator](https://github.com/Vmlweb/Dingle-Validator) - Preset list of parameter validation functions
+Our generator modules allow you to build client side code automatically which are built from your dingle functions and parameters.
+
   * [Dingle Javascript NodeJS](https://github.com/Vmlweb/Dingle-Javascript-NodeJS) - Javascript + NodeJS code generator.
   * [Dingle Swift Alamofire](https://github.com/Vmlweb/Dingle-Swift-Alamofire) - Swift + Alamofire code generator.
 
@@ -134,6 +135,8 @@ exports.execute = [function(response, params, info, next){
 	});
 }];
 ```
+
+You can also use our [Dingle Validator](https://github.com/Vmlweb/Dingle-Validator) module to import our set of pre-defined data types.
 
 ## Advanced Function
 
