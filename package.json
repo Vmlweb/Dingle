@@ -1,6 +1,6 @@
 {
   "name": "dingle",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "NodeJS API Framework",
   "main": "index.js",
   "scripts": {
