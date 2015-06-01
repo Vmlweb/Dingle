@@ -315,7 +315,7 @@ var dingle = require('dingle')({
 	
 	//App (Default from package.json)
 	app_name: 'My Awesome App',
-	app_prefix; 'MAA',
+	app_prefix: 'MAA',
 	app_version: '0.0.7',
 	
 	//Paths
@@ -331,19 +331,19 @@ var dingle = require('dingle')({
 	//HTTPS
 	https_hostname: 'myawesomeapi.com',
 	https_listen: '0.0.0.0',
-	https_port: = 443,
+	https_port: 443,
 	https_ssl_key: './key.pem',
 	https_ssl_cert: './cert.pem',
 	
 	//TCP
 	tcp_hostname: 'myawesomeapi.com',
 	tcp_listen: '0.0.0.0',
-	tcp_port: = 7691,
+	tcp_port: 7691,
 	
 	//UDP
 	udp_hostname: 'myawesomeapi.com',
 	udp_listen: '0.0.0.0',
-	udp_port: = 7692
+	udp_port: 7692
 });
 ```
 
