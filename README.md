@@ -19,7 +19,7 @@ $ npm install --save dingle
 
 Our generator modules allow you to build client side code automatically which are built from your dingle functions and parameters.
 
-  * [Dingle Javascript NodeJS](https://github.com/Vmlweb/Dingle-Javascript-NodeJS) - Javascript + NodeJS code generator.
+  * [Dingle NodeJS](https://github.com/Vmlweb/Dingle-NodeJS) - NodeJS code generator.
   * [Dingle Swift Alamofire](https://github.com/Vmlweb/Dingle-Swift-Alamofire) - Swift + Alamofire code generator.
 
 ## Startup
