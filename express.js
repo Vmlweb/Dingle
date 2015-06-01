@@ -64,8 +64,14 @@ module.exports = function (config, functions) {
 				//Execute Function
 				func.run(params, function(success, message, output, download){
 					if (success){
+						
+						//Check download and absolute values
 						if (download){
-							download = path.join(config.path.downloads,download);
+							if (!path.isAbsolute(download)){
+								download = path.join(config.path.downloads,download);
+							}
+							
+							//Check existance
 							fs.exists(download, function(exists){
 								if (exists){
 									res.status(200).download(download);
