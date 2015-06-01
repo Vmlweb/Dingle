@@ -13,14 +13,15 @@ $ npm install --save dingle
   * HTTP, HTTPS, TCP & UDP
   * Parameter Validation
   * File Download & Uploads
+  * Client Code Generator
   * JSON Input & Output
   
 ## Generators
 
 Our generator modules allow you to build client side code automatically which are built from your dingle functions and parameters.
 
-  * [Dingle NodeJS](https://github.com/Vmlweb/Dingle-NodeJS) - NodeJS code generator.
-  * [Dingle Swift Alamofire](https://github.com/Vmlweb/Dingle-Swift-Alamofire) - Swift + Alamofire code generator.
+  * [Dingle NodeJS](https://github.com/Vmlweb/Dingle-NodeJS)
+  * [Dingle Swift](https://github.com/Vmlweb/Dingle-Swift)
 
 ## Startup
 
