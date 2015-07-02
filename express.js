@@ -85,7 +85,7 @@ module.exports = function (config, functions) {
 							next();
 						}
 					}else{
-						res.status(500).json({ success: success, message: message, output: output });
+						res.status(200).json({ success: success, message: message, output: output });
 						next();
 					}
 				}, req);
