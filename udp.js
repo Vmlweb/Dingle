@@ -34,7 +34,7 @@ module.exports = function (config, functions) {
 			var func = functions[name];
 			
 			//Check Methods
-			if (func.methods.indexOf('TCP') != -1){
+			if (func.methods.indexOf('UDP') != -1){
 				
 				//Execute Function
 				func.run(params, function(success, message, output){
