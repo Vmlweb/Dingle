@@ -58,7 +58,7 @@ module.exports = function (config) {
 					//Required
 					if (!params.hasOwnProperty(param)){
 						if (call.params[param].required){
-							throw "Please enter a " + param;
+							throw "Please enter a " + replace('_',' ',param);
 						}else{
 							valid_params[param] = null;
 							continue;
