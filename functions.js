@@ -66,7 +66,7 @@ module.exports = function (config) {
 					}
 					
 					//Validate
-					valid_params[param] = call.params[param].validator(params[param], 'Please enter a valid ' + param);
+					valid_params[param] = call.params[param].validator(params[param], 'Please enter a valid ' + replace('_',' ',param));
 				}
 				
 				//Construct info

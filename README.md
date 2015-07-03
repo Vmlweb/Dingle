@@ -162,12 +162,12 @@ var validator = require('validator');
 //Setup
 exports.brief = "Register Users"
 exports.description = "Use this function to create a user in the MongoDB database before they are given access to the website.";
-exports.methods = ["GET", "POST" ,"TCP", "UDP"];
+exports.methods = [ "GET", "POST" ,"TCP", "UDP" ];
 
 //Parameters
 exports.params = {};
 exports.params.email = {
-	description: 'Email for registering user'
+	description: 'Email for registering user',
 	validator: function(object){
 		if (!validator.isEmail(object)){
 			throw "Please enter a valid email adress";
@@ -180,7 +180,7 @@ exports.params.password = {
 	description: 'Password for registering user'
 }
 exports.params.news = {
-	description: 'Password for registering user',
+	description: 'User would like to recieve news',
 	required: false,
 	validator: function(object){
 		if (!validator.isBoolean(object)){
